@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Hourly weather · WeatherPro</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <header class="glass bar">
+        <a href="/">← Back to dashboard</a><b id="title">Loading…</b
+        ><button id="unit" class="ghost"></button>
+      </header>
+      <p id="err" class="err"></p>
+      <div class="glass hero">
+        <div>
+          <h2 id="place"></h2>
+          <p id="sum"></p>
+        </div>
+        <div id="sun"></div>
+      </div>
+      <h3>Hour by hour</h3>
+      <div class="glass chart"><canvas id="hc"></canvas></div>
+      <div class="glass" style="margin-top: 14px; overflow-x: auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th></th>
+              <th>Temp</th>
+              <th>Feels</th>
+              <th>Rain %</th>
+              <th>Rain mm</th>
+              <th>Humidity</th>
+              <th>Wind</th>
+              <th>Cloud</th>
+              <th>UV</th>
+              <th>Visibility</th>
+              <th>Pressure</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="day.js"></script>
+  </body>
+</html>

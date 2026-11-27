@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WeatherPro</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="auth">
+      <form id="authForm" class="glass">
+        <h1>🌦️ WeatherPro</h1>
+        <p>Sign in to view your weather dashboard</p>
+        <div id="nameRow" hidden>
+          <input id="name" placeholder="Full name" />
+        </div>
+        <input id="email" type="email" placeholder="Email" required />
+        <input
+          id="password"
+          type="password"
+          placeholder="Password (6+ chars)"
+          required
+          minlength="6"
+        />
+        <button id="authBtn">Sign in</button
+        ><a id="authToggle">New here? Sign up</a>
+        <p id="authErr" class="err"></p>
+      </form>
+    </section>
+
+    <main id="app" hidden>
+      <header class="glass bar">
+        <b>🌦️ WeatherPro</b>
+        <form id="searchForm">
+          <input id="city" placeholder="Search city…" /><button>Search</button>
+        </form>
+        <nav>
+          <a data-t="dash">Dashboard</a><a data-t="rep">Reports</a
+          ><a data-t="hist">History</a><a data-t="adm" class="admin">Admin</a>
+        </nav>
+        <button id="unit" class="ghost">°C</button><span id="who"></span
+        ><button id="out" class="ghost">Logout</button>
+      </header>
+      <p id="err" class="err"></p>
+
+      <section id="t-dash">
+        <div class="glass hero">
+          <div>
+            <h2 id="place"></h2>
+            <div id="clock"></div>
+            <p id="desc"></p>
+          </div>
+          <div class="temp">
+            <img id="icon" alt="" />
+            <div>
+              <div id="big"></div>
+              <div id="feels"></div>
+            </div>
+          </div>
+        </div>
+        <h3>Next 48 hours</h3>
+        <div class="glass chart"><canvas id="hourly"></canvas></div>
+        <h3>Weather details</h3>
+        <div id="cards" class="grid"></div>
+        <h3>Weather maps</h3>
+        <div class="glass" id="mapbox">
+          <div class="maptools">
+            <div class="tabs" id="layers"></div>
+            <span class="seg"
+              ><button data-b="sat">🛰️ Satellite</button
+              ><button data-b="street">🗺️ Street</button
+              ><button data-b="light">⬜ Light</button
+              ><button id="mapme" class="ghost" title="Recenter">◎</button
+              ><button id="mapfs" class="ghost" title="Fullscreen">
+                ⛶
+              </button></span
+            >
+          </div>
+          <div id="mapwrap">
+            <div id="map"></div>
+            <div id="legend"></div>
+          </div>
+          <div class="timebar">
+            <button id="mplay" title="Play forecast">▶</button
+            ><input type="range" id="mtime" min="0" max="0" value="0" /><span
+              id="mlabel"
+            ></span
+            ><button id="mnow" class="ghost">Now</button>
+          </div>
+        </div>
+        <h3>Weather trends</h3>
+        <div class="glass">
+          <div class="tabs" id="trtabs"></div>
+          <div class="opts">
+            <label><input type="checkbox" data-g="a" checked /> Daily</label
+            ><label><input type="checkbox" data-g="f" checked /> Forecast</label
+            ><label
+              ><input type="checkbox" data-g="h" checked /> Historical
+              daily</label
+            >
+          </div>
+          <p id="trerr" class="err"></p>
+          <div class="chart tall"><canvas id="trend"></canvas></div>
+        </div>
+        <div class="grid two" style="margin-top: 14px">
+          <div class="glass">
+            <h4>Climate information</h4>
+            <table id="clim"></table>
+          </div>
+          <div class="glass">
+            <h4>Daily summary (last 12 months)</h4>
+            <table id="sumry"></table>
+          </div>
+        </div>
+        <h3>16-day outlook</h3>
+        <div id="cal" class="grid cal"></div>
+      </section>
+
+      <section id="t-rep" hidden>
+        <div class="glass">
+          <div class="tabs">
+            <button data-r="daily">Daily (hourly)</button
+            ><button data-r="weekly">Weekly</button>
+          </div>
+          <div class="chart"><canvas id="repChart"></canvas></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Period</th>
+                <th>Searches</th>
+                <th>Avg</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Humidity</th>
+                <th>Wind</th>
+              </tr>
+            </thead>
+            <tbody id="repBody"></tbody>
+          </table>
+        </div>
+      </section>
+      <section id="t-hist" hidden>
+        <div class="glass">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>City</th>
+                <th>Temp</th>
+                <th>Weather</th>
+                <th>Humidity</th>
+              </tr>
+            </thead>
+            <tbody id="histBody"></tbody>
+          </table>
+        </div>
+      </section>
+      <section id="t-adm" hidden>
+        <div class="glass">
+          <button id="dl">⬇ Download all data (CSV)</button>
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>City</th>
+                <th>Temp °C</th>
+                <th>Weather</th>
+              </tr>
+            </thead>
+            <tbody id="admBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="app.js"></script>
+    <script src="map.js"></script>
+  </body>
+</html>
